@@ -7,8 +7,8 @@ import routes from './routes';
 const app = express();
 
 // Increase the limit for JSON payloads
-app.use(json({ limit: '50mb' }));
-app.use(urlencoded({ limit: '50mb', extended: true }));
+app.use(json({ limit: '1mb' }));
+app.use(urlencoded({ limit: '1mb', extended: true }));
 app.use(cors());
 
 app.use('/api', routes);

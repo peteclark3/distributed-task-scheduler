@@ -5,46 +5,74 @@ This distributed task scheduler allows clients to register one-time and recurrin
 
 ## Core Requirements
 - Task Types: One-time and recurring tasks.
-- Scheduling: Clients can register tasks with specific execution times or cron syntax.
+- Scheduling: Clients can register tasks to be executed immediately, or via cron syntax.
 - Execution Time: Tasks should be executed within 10 seconds of the scheduled time.
 
-## High-Level Components
-- API Gateway: Handles client requests for task registration and management.
-- Scheduler Service: Manages task scheduling and determines when tasks should be executed.
-- Task Executor: Executes tasks at the scheduled time.
-- Task Storage: Durable storage for tasks (e.g., Redis, PostgreSQL).
-- Worker Nodes: Distributed nodes that execute tasks.
-- Message Queue: Facilitates communication between components (e.g., RabbitMQ, Kafka).
-- Monitoring & Logging: Tracks task execution and system health.
+## Services
+### Frontend Service
+- The end-user interface for task registration and management.
+- Stateless and can be scaled horizontally via kubernetes HPA based on memory and/or CPU usage.
+### Backend (API) Service
+- The API serving the frontend service; allows for task registration and management.
+- Stateless and can be scaled horizontally via kubernetes HPA based on memory and/or CPU usage.
+### Scheduler Service
+- The actual "clock" or cron service which handles task scheduling, sending tasks to the Executor via Redis Stream when tasks need to be executed.
+- Stateless, but only one instance should be running at a time.  Kubernetes deployment will handle ensuring (only) one instance is running.
+### Executor Service
+- Executes tasks as received.  The "worker nodes" of the system.
+- Stateless and can be scaled horizontally via kubernetes HPA based on memory and/or CPU usage, OR a custom metrics scaler based on stream message count size.
 
-## Component Interactions
-- API Gateway: Receives task registration requests and forwards them to the Scheduler Service.
-- Scheduler Service: Stores tasks in Task Storage and uses Message Queue to notify Worker Nodes when tasks are due.
-- Task Executor: Worker Nodes listen to the Message Queue and execute tasks when notified.
-- Task Storage: Stores all task details and schedules, ensuring durability.
-- Message Queue: Ensures reliable communication between Scheduler Service and Worker Nodes.
-- Monitoring & Logging: Logs execution details and monitors system health.
+## Other Components
+### Redis 
+- Database: durable storage for task details and schedules.
+- Stream: Used to notify Executor services when tasks are due.
+- *Each can be scaled horizontally to handle increased load.*
 
+Note: I went with a single DB/stream provider for task simplicity's sake.  Could also use kafka for the task log, postgres for the task schedule storage, etc.*
+
+### High-Level Architecture
+
+```plaintext
++-------------+      +-------------+      +------------------+      +----------------+
+|   Frontend  | <--> |  Backend    | <--> |   Scheduler      | <--> |  Task Executor |
++-------------+      +-------------+      +------------------+      +----------------+
+                                           |
+                                           |
+                                        +------+
+                                        | Redis|
+                                        +------+
+ ```
+ 
 ## High Availability & Durability
-- Redundancy: Deploy multiple instances of API Gateway, Scheduler Service, and Worker Nodes.
-- Replication: Use replicated storage for Task Storage (e.g., PostgreSQL with replication).
-- Failover: Implement failover mechanisms for Message Queue and storage systems.
-
-## Scalability
-- Horizontal Scaling: Add more Worker Nodes to handle increased task load.
-- Partitioning: Partition tasks across multiple Worker Nodes.
-- Load Balancing: Use a load balancer for API Gateway and Worker Nodes.
+### Frontend & Backend Services
+- Deploy a minimum of 2 instances each of Frontend web servers & Backend API behind respective kubernetes `service`s (k8s `service`s resolve to load balancers in AWS).  
+- Configure k8s HPA to scale based on memory and/or CPU usage.
+### Scheduler
+- Configure kube deployment to ensure there is always a single instance of the scheduler running.
+### Executor
+- Deploy a minimum of 2 Executor services. 
+- Configure k8s HPA to scale based on memory and/or CPU usage, or even a custom metric like stream message count (such that Executors are added/removed based on the number of tasks to be executed).
+- Redis database & stream
+  - Both redis data store and redis streams are clusterable and active-active replicable for maximum durability.
 
 ## Cost-Effectiveness
-- Containerization: Use Docker to containerize components for efficient resource utilization.
-- Auto-scaling: Implement auto-scaling for Worker Nodes based on task load.
-- Cloud Services: Leverage cost-effective cloud services for storage and messaging.
+### Containerization
+- Use Docker to containerize & ship components (& dependencies) for efficient resource utilization.
+### Kubernetes resource limits
+- Configure resource limits for containers (same as a kube pod in our case) to prevent resource wastage.
+### Karpenter
+- Use Karpenter (if on AWS) for efficient use of ec2 instances. Karpenter will automatically choose the least expensive instance types that meet the resource requirements of a cluster's pods.  
+*(Without Karpenter, AWS limits you to a single instance type per cluster, which can lead to wasted resources.)*
+### Auto-scaling
+- Implement horizontal pod auto-scaling for Frontend, Backend, and Executor services.
+### Cloud Services
+- If Karpenter is used, can easily start with free tier ec2 instances and scale up as needed.
 
 ## Choke Points & Mitigation
-- Scheduler Service Bottleneck: Ensure Scheduler Service is stateless and can scale horizontally.
-- Message Queue Load: Use high-throughput messaging systems and partition queues.
-- Database Performance: Optimize database queries and use caching for frequently accessed data.
+### Executor bottleneck
+- I can envision certain tasks being "heavy" and some being "light."  To mitigate this, I might implement **both** custom metric scaling (scale based on stream count stream count) **and** CPU and memory based scaling. This way, if the stream is backed up OR if executors are struggling CPU- or memory- wise to handle tasks, more Executors are added to handle the load.
 
-## Scaling Up/Down
-- Scaling Up: Add more Worker Nodes, API Gateway instances, and partition databases.
-- Scaling Down: Reduce instances based on load, ensuring minimum redundancy for availability.
+### Scheduler - a single point of failure
+- In this design, there is always exactly one scheduler running.  If millions of tasks are scheduled, this could lead to a high amount of memory usage in this service (as it needs to keep track of all tasks).  To mitigate this, I could implement a **sharding** strategy where tasks are split up among multiple schedulers, possibly by the month or even the day field of the cron syntax. The sharding could be extended to the streams, as well, but then we'd ideally switch to Kafka (or another stream provider that supports sharding natively).
+---
+For future considerations, see [Future thoughts](future.md).

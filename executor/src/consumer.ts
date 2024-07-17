@@ -8,7 +8,6 @@ const CONSUMER_NAME = 'executor_1';
 export const startConsumer = async () => {
   const client = new Redis({ host: 'redis' });
 
-  // Create a consumer group
   try {
     await client.xgroup('CREATE', REDIS_STREAM, GROUP_NAME, '$', 'MKSTREAM');
     console.log(`Consumer group ${GROUP_NAME} created`);
@@ -36,10 +35,7 @@ export const startConsumer = async () => {
         console.log(`Received messages: ${JSON.stringify(messages)}`);
         for (const [stream, records] of messages) {
           for (const record of records) {
-            console.log(`Received record: ${JSON.stringify(record)}`);
             const [id, fields] = record;
-            console.log(`id is ${id}, fields is ${JSON.stringify(fields)}`);
-            // Find the task field
             const taskFieldIndex = fields.findIndex(field => field === 'task');
             if (taskFieldIndex !== -1) {
               const taskString = fields[taskFieldIndex + 1];

@@ -18,11 +18,11 @@ const TaskLog: React.FC = () => {
       }
     };
 
-    fetchExecutedTasks(); // Fetch immediately
+    fetchExecutedTasks(); 
 
-    const intervalId = setInterval(fetchExecutedTasks, 2000); // Fetch every 2 seconds
+    const intervalId = setInterval(fetchExecutedTasks, 2000); 
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    return () => clearInterval(intervalId); 
   }, []);
 
   return (

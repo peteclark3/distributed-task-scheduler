@@ -1,10 +1,38 @@
 import React, { useState } from 'react';
+import cronValidate from 'cron-validate'; // Import the cron validator
 
-const TaskForm: React.FC = () => {
+interface TaskFormProps {
+  onTaskSubmit: () => void;
+}
+
+const TaskForm: React.FC<TaskFormProps> = ({ onTaskSubmit }) => {
   const [task, setTask] = useState({ name: '', type: 'immediate', schedule: '' });
+  const [errors, setErrors] = useState({ name: '', schedule: '' });
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { name: '', schedule: '' };
+
+    if (!task.name) {
+      newErrors.name = 'Task name is required';
+      valid = false;
+    }
+
+    if (task.type === 'scheduled' && !cronValidate(task.schedule, {preset: 'npm-node-cron'}).isValid()) {
+      newErrors.schedule = 'Invalid cron syntax.';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     await fetch('http://localhost:3000/api/tasks', {
       method: 'POST',
       headers: {
@@ -13,6 +41,8 @@ const TaskForm: React.FC = () => {
       body: JSON.stringify(task),
     });
     setTask({ name: '', type: 'immediate', schedule: '' });
+    setErrors({ name: '', schedule: '' });
+    onTaskSubmit(); // Refresh the task list after submitting a new task
   };
 
   return (
@@ -22,12 +52,13 @@ const TaskForm: React.FC = () => {
           <label htmlFor="taskName">Task Name</label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
             id="taskName"
             value={task.name}
             onChange={e => setTask({ ...task, name: e.target.value })}
             placeholder="Task Name"
           />
+          {errors.name && <div className="invalid-feedback">{errors.name}</div>}
         </div>
         <div className="form-group">
           <label htmlFor="taskType">Task Type</label>
@@ -43,15 +74,16 @@ const TaskForm: React.FC = () => {
         </div>
         {task.type === 'scheduled' && (
           <div className="form-group">
-            <label htmlFor="taskSchedule">Task Schedule</label>
+            <label htmlFor="taskSchedule">Task Schedule (use <a href="https://github.com/kelektiv/node-cron?tab=readme-ov-file#cron-patterns" target="cron">cron syntax</a>)</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${errors.schedule ? 'is-invalid' : ''}`}
               id="taskSchedule"
               value={task.schedule}
               onChange={e => setTask({ ...task, schedule: e.target.value })}
               placeholder="Task Schedule"
             />
+            {errors.schedule && <div className="invalid-feedback">{errors.schedule}</div>}
           </div>
         )}
         <button type="submit" className="btn btn-primary mt-3">Add Task</button>

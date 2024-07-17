@@ -7,6 +7,7 @@ const client = new Redis({ host: 'redis' });
 
 export const registerTask = async (req: Request, res: Response) => {
   const task = req.body;
+  console.log(`registerTask: ${JSON.stringify(task)}`);
   await addTask(task);
   res.status(201).send('Task registered');
 };
