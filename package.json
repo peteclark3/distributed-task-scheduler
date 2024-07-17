@@ -1,0 +1,19 @@
+{
+  "name": "distributed-task-scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:backend": "cd backend && npm install && npm run build",
+    "build:scheduler": "cd scheduler && npm install && npm run build",
+    "build:executor": "cd executor && npm install && npm run build",
+    "build": "npm run build:backend && npm run build:scheduler && npm run build:executor",
+    "clean:backend": "cd backend && rm -rf dist && rm -f tsconfig.tsbuildinfo",
+    "clean:scheduler": "cd scheduler && rm -rf dist && rm -f tsconfig.tsbuildinfo",
+    "clean:executor": "cd executor && rm -rf dist && rm -f tsconfig.tsbuildinfo",
+    "clean": "npm run clean:backend && npm run clean:scheduler && npm run clean:executor",
+    "install:all": "npm install && npm run install:backend && npm run install:scheduler && npm run install:executor",
+    "install:backend": "cd backend && npm install",
+    "install:scheduler": "cd scheduler && npm install",
+    "install:executor": "cd executor && npm install"
+  }
+}
