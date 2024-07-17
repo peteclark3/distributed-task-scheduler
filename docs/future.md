@@ -26,3 +26,6 @@
 - Update launch args & Dockerfiles to expose ports for all services in *local* environments to allow for debugging & hot reloading.
 ### Websockets
 - For real-time executed task updates (instead of polling the API as is done now)
+### Nitpicky
+- Fix the `tsconfig.json` files to be more consistent across services (use a base tsconfig and extend in each perhaps)
+- Persist redis volume across docker-compose down/up
