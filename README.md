@@ -11,11 +11,11 @@ For more information, see the [design document](docs/design.md) and if you are i
   - The easiest way to do this is to install [Docker Desktop](https://docs.docker.com/compose/install/#scenario-one-install-docker-desktop). 
 
 ## Installation
-- Clone this repo.
+- Clone this repo, e.g. `git clone https://github.com/peteclark3/distributed-task-scheduler.git`
 
 ## Running
-- In the root directory, run `docker-compose up --build -d`
-- Visit http://localhost:3001 to access the frontend.  Hopefully, registering tasks is self-explanatory.  If not, please see the [design document](docs/design.md) for more information.
+- In the root directory (cd `distributed-task-scheduler` if you haven't already), run `docker-compose up --build -d`
+- Wait a bit, then visit http://localhost:3001 to access the frontend.  The frontend takes a bit to start (see the frontend Dockerfile for more info)  Hopefully, registering tasks is self-explanatory.  If not, please see the [design document](docs/design.md) for more information.
 
 ## Stopping
 - In the root directory, run `docker-compose down`
