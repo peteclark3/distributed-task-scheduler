@@ -29,3 +29,5 @@
 ### Nitpicky
 - Fix the `tsconfig.json` files to be more consistent across services (use a base tsconfig and extend in each perhaps)
 - Persist redis volume across docker-compose down/up
+- Fix all kinds of deprecations
+- Add a linter & code auto-formatter
