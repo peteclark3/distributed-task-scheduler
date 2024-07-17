@@ -27,18 +27,8 @@ This distributed task scheduler allows clients to register one-time and recurrin
 
 Note: I went with a single DB/stream provider for task simplicity's sake.  Could also use kafka for the task log, postgres for the task schedule storage, etc.*
 
-### High-Level Architecture
-
-```plaintext
-+-------------+      +-------------+      +------------------+      +----------------+
-|   Frontend  | <--> |  Backend    | <--> |   Scheduler      | <--> |  Task Executor |
-+-------------+      +-------------+      +------------------+      +----------------+
-                                           |
-                                           |
-                                        +------+
-                                        | Redis|
-                                        +------+
- ```
+### High-Level Diagram
+![DTS Diagram](./DTS_Diagram.png)
 
 ## High Availability & Durability
 ### Frontend & Backend Services
