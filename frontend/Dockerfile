@@ -4,13 +4,11 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-# workaround to fix react-scripts not found during execution :/
-RUN npm install -g create-react-app
-
 RUN npm install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# annoying workaround for react-scripts not starting in docker
+CMD [ "sh", "-c", "npm install && npm run start" ]

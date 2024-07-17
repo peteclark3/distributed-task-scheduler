@@ -16,6 +16,9 @@
 - Use Lerna, yarn, or another code-sharing tool to share code between services. In this case, `task.ts` and `taskStorage.ts`.
 ### Add Automated Tests
 - Add unit & integration tests for all services to ensure code quality and prevent regressions
+### Security scans
+- Use a tool like Snyk to scan all container images for vulnerabilities.
+- Fix all critical vulnerabilities found.
 ### Task timeout & failure handling
 - Re-queue tasks for execution if they fail or time out.
 ### CI/CD Pipeline
