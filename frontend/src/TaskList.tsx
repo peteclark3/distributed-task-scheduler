@@ -9,10 +9,15 @@ const TaskList: React.FC = () => {
       const data = await response.json();
       setTasks(data);
     };
-    fetchTasks();
+
+    fetchTasks(); // Fetch immediately
+
+    const intervalId = setInterval(fetchTasks, 2000); // Fetch every 2 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
-   return (
+  return (
     <div className="container mt-5">
       <h2>All Tasks</h2>
       <table className="table table-striped">

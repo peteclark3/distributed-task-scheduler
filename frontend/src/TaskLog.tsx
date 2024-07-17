@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Task } from './types'; 
+import { Task } from './types';
 
 const TaskLog: React.FC = () => {
   const [executedTasks, setExecutedTasks] = useState<Task[]>([]);
@@ -18,7 +18,11 @@ const TaskLog: React.FC = () => {
       }
     };
 
-    fetchExecutedTasks();
+    fetchExecutedTasks(); // Fetch immediately
+
+    const intervalId = setInterval(fetchExecutedTasks, 2000); // Fetch every 2 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
   return (
