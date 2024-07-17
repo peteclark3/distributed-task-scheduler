@@ -21,13 +21,12 @@ For more information, see the [design document](docs/design.md) and if you are i
 ## Stopping
 - In the root directory, run `docker-compose down`
 
-## Contributing
+## Video Demo
+![](video_demo.mp4)
 
+## Contributing
 Fork it, patch it, and send a pull request. It’ll get reviewed and merged faster than you can say “Distributed Task Scheduler!”
 
-
 ## License
-
 "THE COFFEEWARE LICENSE" (Revision 42):
-
 For better or worse, Pete Clark is responsible for this repo. Do whatever you want with this stuff. If we meet someday, and you think this stuff was worth it, you can buy me a coffee in return. 
