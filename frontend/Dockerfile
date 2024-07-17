@@ -1,20 +1,16 @@
-# Use an official node image as the base image
-FROM node:14
+FROM node:16
 
-# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# workaround to fix react-scripts not found during execution :/
+RUN npm install -g create-react-app
+
 RUN npm install
 
-# Copy the rest of the application
 COPY . .
 
-# Expose the port the app runs on
 EXPOSE 3000
 
-# Start the application
 CMD ["npm", "start"]
