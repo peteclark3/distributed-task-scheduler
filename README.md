@@ -23,7 +23,7 @@ For more information, see the [design document](docs/design.md) and if you are i
 
 ## Contributing
 
-Want to make this project even better? Fork it, patch it, and send a pull request. If your code is awesome enough to make me do a happy dance, it’ll get merged faster than you can say “Distributed Task Scheduler!”
+Fork it, patch it, and send a pull request. It’ll get reviewed and merged faster than you can say “Distributed Task Scheduler!”
 
 
 ## License
