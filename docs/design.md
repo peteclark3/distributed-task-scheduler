@@ -11,16 +11,13 @@ This distributed task scheduler allows clients to register one-time and recurrin
 ## Services
 ### Frontend Service
 - The end-user interface for task registration and management.
-- Stateless and can be scaled horizontally via kubernetes HPA based on memory and/or CPU usage.
 ### Backend (API) Service
 - The API serving the frontend service; allows for task registration and management.
-- Stateless and can be scaled horizontally via kubernetes HPA based on memory and/or CPU usage.
 ### Scheduler Service
 - The actual "clock" or cron service which handles task scheduling, sending tasks to the Executor via Redis Stream when tasks need to be executed.
-- Stateless, but only one instance should be running at a time.  Kubernetes deployment will handle ensuring (only) one instance is running.
 ### Executor Service
 - Executes tasks as received.  The "worker nodes" of the system.
-- Stateless and can be scaled horizontally via kubernetes HPA based on memory and/or CPU usage, OR a custom metrics scaler based on stream message count size.
+
 
 ## Other Components
 ### Redis 
@@ -42,7 +39,7 @@ Note: I went with a single DB/stream provider for task simplicity's sake.  Could
                                         | Redis|
                                         +------+
  ```
- 
+
 ## High Availability & Durability
 ### Frontend & Backend Services
 - Deploy a minimum of 2 instances each of Frontend web servers & Backend API behind respective kubernetes `service`s (k8s `service`s resolve to load balancers in AWS).  
