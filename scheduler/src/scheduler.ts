@@ -10,6 +10,7 @@ const POLLING_INTERVAL = 1000; // Poll every second
 interface CustomScheduledTask {
   task: cron.ScheduledTask;
   schedule: string;
+  name: string;
 }
 
 interface ScheduledTasks {
@@ -37,7 +38,7 @@ export const startScheduler = async () => {
     // add (or update) existing tasks
     for (const task of cronTasks) {
       if (scheduledTasks[task.id]) {
-        if (scheduledTasks[task.id].schedule !== task.schedule) {
+        if (scheduledTasks[task.id].schedule !== task.schedule || scheduledTasks[task.id].name !== task.name) {
           scheduledTasks[task.id].task.stop();
           scheduledTasks[task.id] = {
             task: cron.schedule(task.schedule, async () => {
@@ -45,6 +46,7 @@ export const startScheduler = async () => {
               console.log(`Cron task added to queue: ${task.id}`);
             }),
             schedule: task.schedule,
+            name: task.name,
           };
           console.log(`Updated task: ${task.id}`);
         }
@@ -55,6 +57,7 @@ export const startScheduler = async () => {
             console.log(`Cron task added to queue: ${task.id}`);
           }),
           schedule: task.schedule,
+          name: task.name,
         };
         console.log(`Scheduled task: ${task.id}`);
       }

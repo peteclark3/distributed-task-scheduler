@@ -16,7 +16,8 @@ const tasksKey = 'tasks';
 export const addTask = async (task: Omit<Task, 'id' | 'status'>): Promise<void> => {
   const id = uuidv4();
   let newTask: Task = { ...(task as Task), id, status: 'pending' };
-  if (newTask.type === 'immediate') {
+
+  if (task.type === 'immediate') {
     const now = new Date();
     const seconds = (now.getSeconds() + 5) % 60;
     const minutes = (now.getSeconds() + 5 >= 60) ? now.getMinutes() + 1 : now.getMinutes();

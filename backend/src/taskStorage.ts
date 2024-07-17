@@ -14,10 +14,8 @@ const tasksKey = 'tasks';
  * Future consideration: add an immediate task type to the redis stream right here; don't bother storing it?
  */
 export const addTask = async (task: Omit<Task, 'id' | 'status'>): Promise<void> => {
-  console.log(`task is ${JSON.stringify(task)}`);
   const id = uuidv4();
   let newTask: Task = { ...(task as Task), id, status: 'pending' };
-  console.log(`newTask is ${JSON.stringify(newTask)}`);
 
   if (task.type === 'immediate') {
     const now = new Date();

@@ -49,7 +49,7 @@ Note: I went with a single DB/stream provider for task simplicity's sake.  Could
 ### Executor
 - Deploy a minimum of 2 Executor services. 
 - Configure k8s HPA to scale based on memory and/or CPU usage, or even a custom metric like stream message count (such that Executors are added/removed based on the number of tasks to be executed).
-- Redis database & stream
+### Redis database & stream
   - Both redis data store and redis streams are clusterable and active-active replicable for maximum durability.
 
 ## Cost-Effectiveness
