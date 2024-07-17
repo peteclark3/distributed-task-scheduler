@@ -22,7 +22,7 @@ For more information, see the [design document](docs/design.md) and if you are i
 - In the root directory, run `docker-compose down`
 
 ## Video Demo
-![](video_demo.mp4)
+https://github.com/user-attachments/assets/1c7d84d2-59ec-46e2-ade5-46fe1d0c32a2
 
 ## Contributing
 Fork it, patch it, and send a pull request. It’ll get reviewed and merged faster than you can say “Distributed Task Scheduler!”
