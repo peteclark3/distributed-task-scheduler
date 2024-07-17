@@ -5,10 +5,10 @@ const REDIS_EXECUTED_LIST = 'task_executed_list';
 const client = new Redis({ host: 'redis' });
 
 export const executeTask = async (task: Task) => {
-  // Simulate task execution
-  console.log(`Executing task: ${task.id} - ${task.type}`);
+  // pretend we're executing the task
+  console.log(`Executing task: ${task.name} - ${task.type}`);
 
-  // Log task execution to a stream
+  // log executed task 
   const logEntry = {
     id: task.id,
     type: task.type,
@@ -23,7 +23,6 @@ export const executeTask = async (task: Task) => {
     }) + " UTC",
   };
 
-  // Log executed task to a hash set
   await client.rpush(REDIS_EXECUTED_LIST, JSON.stringify(logEntry));
   console.log(`Task logged in hash set: ${task.id}`);
 };

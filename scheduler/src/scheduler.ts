@@ -5,7 +5,7 @@ import { getCronTasks } from './taskStorage';
 const REDIS_STREAM = 'task_stream';
 const client = new Redis({ host: 'redis' });
 
-const POLLING_INTERVAL = 1000; // Poll every second
+const POLLING_INTERVAL = 1000; 
 
 interface CustomScheduledTask {
   task: cron.ScheduledTask;
