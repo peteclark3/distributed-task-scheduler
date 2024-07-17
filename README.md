@@ -15,7 +15,7 @@ For more information, see the [design document](docs/design.md) and if you are i
 
 ## Running
 - In the root directory (cd `distributed-task-scheduler` if you haven't already), run `docker-compose up --build -d`
-- Wait a bit, then visit http://localhost:3001 to access the frontend.  The frontend takes a bit to start (see the frontend Dockerfile for more info). If you want to be sure the frontend has started, you can run `docker-compose logs frontend -f` in the repo root directory.  Once you see `You can now view scheduler-frontend in the browser`, you can visit http://localhost:3001.
+- Wait a bit, then visit http://localhost:3001 to access the frontend.  The frontend takes a bit to start (see the frontend Dockerfile for more info). If you want to be sure the frontend has started, you can run `docker-compose logs frontend -f` in the repo root directory.  Once you see `You can now view scheduler-frontend in the browser`, it's ready.
 - Hopefully, registering tasks in the UI is self-explanatory.  If not, please see the [design document](docs/design.md) for more information.
 
 ## Stopping
