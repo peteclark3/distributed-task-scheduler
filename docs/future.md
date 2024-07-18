@@ -9,7 +9,7 @@
 - Augment services with nodejs prom-client to expose both basic nodejs metrics & custom metrics
     - Can utilize out-of-the-box nodejs dashboards for grafana as a starting point.
 ### Alerting
-- Use alertmanager and OpsGenie (or PagerDuty) for alerting. 
+- Use alertmanager and OpsGenie (or PagerDuty) for alerting.  Alerts could include high CPU usage, high memory usage, stream count over a threshold, or task failure.
 
 ## Future features
 ### Task Expiry
@@ -22,7 +22,7 @@
 - Use a tool like Snyk to scan all container images for vulnerabilities.
 - Fix all critical vulnerabilities found.
 ### Task timeout & failure handling
-- Re-queue tasks for execution if they fail or time out.
+- Optionally re-queue tasks for execution if they fail or time out.  
 ### CI/CD Pipeline
 - Use Github Actions or Jenkins CI/CD to automate the build, test, and deployment of services.
 ### Hardcoding
