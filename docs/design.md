@@ -16,13 +16,13 @@ This distributed task scheduler allows clients to register one-time and recurrin
 ### Scheduler Service
 - The actual "clock" or cron service which handles task scheduling, sending tasks to the Executor via Redis Stream when tasks need to be executed.
 ### Executor Service
-- Executes tasks as received.  The "worker nodes" of the system.
+- Queries the Redis Stream via consumer group for tasks to run, and executes them.  The "worker nodes" of the system.  
 
 
 ## Other Components
 ### Redis 
-- Database: durable storage for task details and schedules.
-- Stream: Used to notify Executor services when tasks are due.
+- Database: durable storage for task details, schedules, and task execution logs.
+- Stream: Receives tasks from the scheduler when they're due to run. Holds tasks waiting to be executed.  Executor(s) query it via consumer group such that multiple executors can service the stream and not duplicatively execute tasks. 
 - *Each can be scaled horizontally to handle increased load.*
 
 Note: I went with a single DB/stream provider for task simplicity's sake.  Could also use kafka for the task log, postgres for the task schedule storage, etc.
