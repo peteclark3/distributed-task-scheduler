@@ -25,7 +25,7 @@ This distributed task scheduler allows clients to register one-time and recurrin
 - Stream: Used to notify Executor services when tasks are due.
 - *Each can be scaled horizontally to handle increased load.*
 
-Note: I went with a single DB/stream provider for task simplicity's sake.  Could also use kafka for the task log, postgres for the task schedule storage, etc.*
+Note: I went with a single DB/stream provider for task simplicity's sake.  Could also use kafka for the task log, postgres for the task schedule storage, etc.
 
 ### High-Level Diagram
 ![DTS Diagram](./DTS_Diagram.png)
