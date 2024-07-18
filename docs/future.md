@@ -12,6 +12,8 @@
 - Use alertmanager and OpsGenie (or PagerDuty) for alerting. 
 
 ## Future features
+### Task Expiry
+- Add an expiryTime attribute to task stream messages to ensure tasks do not get executed more than 10s from their scheduled run time.  Necessary in case all executor services are down, which could potentially causing the task stream to fill up with redundant tasks. 
 ### Code sharing
 - Use Lerna, yarn, or another code-sharing tool to share code between services. In this case, `task.ts` and `taskStorage.ts`.
 ### Add Automated Tests
