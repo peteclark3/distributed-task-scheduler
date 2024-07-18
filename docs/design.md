@@ -10,9 +10,9 @@ This distributed task scheduler allows clients to register one-time and recurrin
 
 ## Services
 ### Frontend Service
-- The end-user interface for task registration and management.
+- The end-user interface for task registration and management. Interfaces with the backend API via REST endpoints.
 ### Backend (API) Service
-- The API serving the frontend service; allows for task registration and management.
+- The REST API serving the frontend service; allows for task registration and management.  Stores scheduled tasks to redis, queries redis for scheduled tasks and executed tasks.
 ### Scheduler Service
 - The actual "clock" or cron service which handles task scheduling, sending tasks to the Executor via Redis Stream when tasks need to be executed.
 ### Executor Service
